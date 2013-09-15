@@ -28,6 +28,7 @@ Example
 $ ./svserver.py # starts server on localhost:9000
 # In another terminal
 $ ./svclient.py register # registers and saves new client ID
+3832ca2f087df75fdb10a72f0fe2799754532c89de6531e9710b70e8 # saved in ~/.svtoken
 $ ./svclient.py store foo bar
 $ ./svclient.py store ham eggs
 $ ./svclient.py retrieve foo
