@@ -38,7 +38,19 @@ def load_data(filename=None):
     try:
         return pickle.load(open(filename, "rb"))
     except Exception:
-        return {}
+        create_data_file(filename=filename)
+
+def create_data_file(filename=None):
+    '''Creates a new data file, asking the user to confirm that it is OK
+    to destroy any existing data'''
+    if filename == None:
+        filename = default_filename()
+    print "Do you want to create a new database at {}? (y/n)".format(filename)
+    print "Any existing data will be destroyed."
+    response = raw_input()
+    if response in ["y", "Y", "yes", "YES"]:
+        save_data({}, filename=filename) # create new database
+        load_data(filename=filename)
 
 ################
 # Registration #
@@ -117,4 +129,5 @@ def serve_forever():
     server.serve_forever()
 
 if __name__ == '__main__':
+    load_data() # check we can load data OK
     serve_forever()

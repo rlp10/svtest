@@ -17,15 +17,6 @@ Run "svtests.py" to run the unit tests.
 Bugs
 ----
 
-- There should be better error checking in load_data rather than just
-  returning an empty dictionary whenever it catches an exception.  The
-  assumption is that an exception would mean that the file doesn't
-  exist yet.  If there was an exception for a different reason then
-  there would be a risk of overwriting all data!
-
-- It would be better to check the reliability of the data before the
-  server is loaded rather than when the first request is made.
-
 - new_token uses a sha244 hash of the current time to create a random
   token.  This is horribly slow and there must be a better way of
   doing it.
