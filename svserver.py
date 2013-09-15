@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import argparse
 import hashlib
 import logging
 import os
@@ -118,16 +119,23 @@ def retrieve(token, key):
     data = load_data()
     return retrieve_entry(data,token, key)
 
-def serve_forever():
+def serve_forever(host, port):
     '''Setup web server and offer API'''
     logging.basicConfig(level = logging.DEBUG)
-    server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
+    server = SimpleXMLRPCServer((host, port), logRequests=True)
     server.register_function(hello)
     server.register_function(register)
     server.register_function(store)
     server.register_function(retrieve)
     server.serve_forever()
 
+def main():
+    '''Main function'''
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", default="localhost", help="hostname on which to offer web server")
+    parser.add_argument("--port", default=9000, type=int, help="port number")
+    args = parser.parse_args()
+    serve_forever(args.host, args.port)
+
 if __name__ == '__main__':
-    load_data() # check we can load data OK
-    serve_forever()
+    main()
