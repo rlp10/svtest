@@ -1,13 +1,38 @@
 Svtest
 ======
 
+Svtest is a key/value store offered as an XML-RPC webservice, along
+with a command line client.
+
+Each client registers their own ID, and can then access a key/value
+store individual to that client ID.
+
 Usage
 -----
 
-Run the server program svserver.py to start the web server.
+Run the server program svserver.py to start the web server.  The
+default host is "localhost" and port number is 9000.  Run "svserver.py
+-h" for details on how to change this.
 
-You can then register, store and retrieve values using svclient.py.
-You can get usage information by running "svclient.py -h".
+You can then register, store and retrieve values using svclient.py or
+any other XML-RPC client.  You get usage information on running the
+client with "svclient.py -h".  Once you register, svclient.py saves
+your client token in ~/.svtoken so you don't have to keep entering it.
+
+Example
+-------
+
+```shell
+$ ./svserver.py # starts server on localhost:9000
+# In another terminal
+$ ./svclient.py register # registers and saves new client ID
+$ ./svclient.py store foo bar
+$ ./svclient.py store ham eggs
+$ ./svclient.py retrieve foo
+bar
+$ ./svclient.py retrieve ham
+eggs
+```
 
 Testing
 -------
@@ -23,9 +48,6 @@ Bugs
 
 Roadmap
 -------
-
-- Commandline arguments could be developed in order to specify the
-  host and port number of the server
 
 - Commandline arguments for the client so that you can connect from a
   different host onto any port
