@@ -23,54 +23,63 @@ def load_token():
 def del_token():
     os.remove(token_filename())
 
-#########
-# Proxy #
-#########
-
-def get_proxy():
-    return xmlrpclib.ServerProxy('http://localhost:9000')
-
 ############
 # Commands #
 ############
 
-def register():
-    proxy = get_proxy()
+def register(proxy):
     token = proxy.register()
     save_token(token)
+    print token
 
-def store(key, value):
+def store(proxy, key, value):
     token = load_token()
-    proxy = get_proxy()
     proxy.store(token, key, value)
 
-def retrieve(key):
+def retrieve(proxy, key):
     token = load_token()
-    proxy = get_proxy()
     print proxy.retrieve(token, key)
 
 ##########################
 # Command Line Arguments #
 ##########################
 
-parser = argparse.ArgumentParser()
-subparsers = parser.add_subparsers(help='commands')
+def parse_args():
 
-# register command
-register_parser = subparsers.add_parser('register', help='Register for new token (Warning: Overwrites existing token!)')
-register_parser.set_defaults(func=lambda args: register())
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help='commands')
 
-# store command
-store_parser = subparsers.add_parser('store', help='Stores a key/value entry')
-store_parser.add_argument('key', help='Key')
-store_parser.add_argument('value', help='Value')
-store_parser.set_defaults(func=lambda args: store(args.key, args.value))
+    # host and port configuration
+    parser.add_argument('--host', default='localhost', help='hostname of server')
+    parser.add_argument('--port', default=9000, type=int, help='port number of server')
 
-# retrieve command
-retrieve_parser = subparsers.add_parser('retrieve', help="Retrieve the value from the specified entry")
-retrieve_parser.add_argument('key', help='Key')
-retrieve_parser.set_defaults(func=lambda args: retrieve(args.key))
+    # register command
+    register_parser = subparsers.add_parser('register', help='Register for new token (Warning: Overwrites existing token!)')
+    register_parser.set_defaults(func=lambda args: register(args.proxy))
+
+    # store command
+    store_parser = subparsers.add_parser('store', help='Stores a key/value entry')
+    store_parser.add_argument('key', help='Key')
+    store_parser.add_argument('value', help='Value')
+    store_parser.set_defaults(func=lambda args: store(args.proxy, args.key, args.value))
+
+    # retrieve command
+    retrieve_parser = subparsers.add_parser('retrieve', help="Retrieve the value from the specified entry")
+    retrieve_parser.add_argument('key', help='Key')
+    retrieve_parser.set_defaults(func=lambda args: retrieve(args.proxy, args.key))
+
+    args = parser.parse_args()
+    return args
+
+########
+# Main #
+########
+
+def main():
+    args = parse_args()
+    proxy_address = 'http://{}:{}'.format(args.host, args.port)
+    args.proxy = xmlrpclib.ServerProxy(proxy_address)
+    args.func(args)
 
 if __name__ == '__main__':
-    args = parser.parse_args()
-    args.func(args)
+    main()
