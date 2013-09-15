@@ -21,6 +21,13 @@ don't have to keep entering it.
 
 If you register again, then it overwrites your previous token.
 
+API
+---
+
+The API exposes three functions register, store and retrieve.  Details
+can be found in specification.md.  Note that a call to retrieve with
+an empty string lists all available keys.
+
 Example
 -------
 
@@ -28,13 +35,19 @@ Example
 $ ./svserver.py # starts server on localhost:9000
 # In another terminal
 $ ./svclient.py register # registers and saves new client ID
-3832ca2f087df75fdb10a72f0fe2799754532c89de6531e9710b70e8 # saved in ~/.svtoken
+3832ca2f087df75fdb10a72f0fe2799754532c89de6531e9710b70e8
 $ ./svclient.py store foo bar
 $ ./svclient.py store ham eggs
 $ ./svclient.py retrieve foo
 bar
 $ ./svclient.py retrieve ham
 eggs
+$ ./svclient.py retrieve ""
+foo
+ham
+$ ./svclient.py list
+foo
+ham
 ```
 
 Testing

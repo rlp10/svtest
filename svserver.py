@@ -87,6 +87,10 @@ def retrieve_entry(data, token, key):
     '''Retrieves an entry from the relevant client's record'''
     return data[token][key]
 
+def list_entries(data, token):
+    '''Lists all available entries'''
+    return data[token].keys()
+
 ###############
 # Web Service #
 ###############
@@ -117,7 +121,10 @@ def store(token, key, value):
 def retrieve(token, key):
     '''Retrieve function to be offered as web service'''
     data = load_data()
-    return retrieve_entry(data,token, key)
+    if (key == "") or (key == None):
+        return list_entries(data, token)
+    else:
+        return retrieve_entry(data,token, key)
 
 def serve_forever(host, port):
     '''Setup web server and offer API'''

@@ -40,6 +40,11 @@ def retrieve(proxy, key):
     token = load_token()
     print proxy.retrieve(token, key)
 
+def list_keys(proxy):
+    token = load_token()
+    for key in proxy.retrieve(token, ""):
+        print key
+
 ##########################
 # Command Line Arguments #
 ##########################
@@ -67,6 +72,10 @@ def parse_args():
     retrieve_parser = subparsers.add_parser('retrieve', help="Retrieve the value from the specified entry")
     retrieve_parser.add_argument('key', help='Key')
     retrieve_parser.set_defaults(func=lambda args: retrieve(args.proxy, args.key))
+
+    # list command
+    list_parser = subparsers.add_parser('list', help="List all keys for given token")
+    list_parser.set_defaults(func=lambda args: list_keys(args.proxy))
 
     args = parser.parse_args()
     return args
