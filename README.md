@@ -46,6 +46,9 @@ Bugs
   token.  This is horribly slow and there must be a better way of
   doing it.
 
+- svclient.py throws a horrible exception if the key does not exist
+  rather than exiting gracefully
+
 Roadmap
 -------
 
